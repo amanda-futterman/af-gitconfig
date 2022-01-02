@@ -1,0 +1,125 @@
+//blackjack project in matlab for engineering class
+
+clc;
+clear;
+fprintf('----------------------------------------------------\n')
+fprintf('Hi player! Welcome to Blackjack by Group J :))))))\n')
+pause(1);
+
+%randomize 1st player card
+playerHand = [];
+playerHand(1) = randi(12);
+if(playerHand(1) == 11 | playerHand(1) == 12)%queen or king
+    playerHand(1) = 10;
+elseif(playerHand(1) == 1)%ace
+    playerHand(1) = 11;
+end
+fprintf('first card: %.0f\n', playerHand(1))
+pause(2);
+
+%randomize 2nd player card
+playerHand(2) = randi(12);
+if(playerHand(2) == 11 | playerHand(2) == 12)%queen or king
+    playerHand(2) = 10;
+elseif(playerHand(2) == 1)%ace
+    playerHand(2) = 11;
+end
+fprintf('second card: %.0f\n', playerHand(2))
+pause(2);
+
+%randomize dealer 1st card
+dealerHand = [];
+dealerHand(1) = randi(12);
+if(dealerHand(1) == 11 | dealerHand(1) == 12)%queen or king
+    dealerHand(1) = 10;
+elseif(dealerHand(1) == 1)%ace
+    dealerHand(1) = 11;
+end
+fprintf('dealers first card: %.0f\n', dealerHand(1))
+pause(2);
+
+%randomize dealer 2nd card
+dealerHand(2) = randi(12);
+if(dealerHand(2) == 11 | dealerHand(2) == 12)%queen or king
+    dealerHand(2)=10;
+elseif(dealerHand(2) == 1)%ace
+    dealerHand(2) = 11;
+end
+fprintf('the dealers other card is hidden \n')
+pause(2);
+
+%calculate totals
+totalPlayer = sum(playerHand);
+totalDealer = sum(dealerHand);
+
+%adjust player total if bust and have ace
+if(totalPlayer > 21)
+    if(playerHand(1) == 11)
+        playerHand(1) = 1;
+    elseif(playerHand(2) == 11)
+        playerHand(2) = 1;
+    end
+end
+
+%adjust dealer total if bust and have ace
+if(totalDealer > 21)
+    if(dealerHand(1) == 11)
+        dealerHand(1) = 1;
+    elseif(dealerHand(2) == 11)
+        dealerHand(2) = 1;
+    end
+end
+
+%show player totals
+fprintf('your card total: %.0f \n', totalPlayer)
+if(totalPlayer == 21 & totalDealer ~=21)
+    fprintf('YOU WIN\n')
+    return
+end
+pause(2);
+
+%hit or stand
+continueLooping = true;
+i = 3;
+while(continueLooping & totalPlayer < 21)
+    ask = input('Do you want to hit or stand?(enter 1 for hit, enter 2 for stand) \n');
+    %hit- deal another card
+    if(ask == 1)
+       playerHand(i) = randi(12);
+       %calculate new total
+       totalPlayer = totalPlayer + playerHand(i);
+       if(playerHand(i) == 11 | playerHand(i) == 12)%queen or king
+         playerHand(i) = 10;
+       elseif(playerHand(i) == 1)%ace
+           playerHand(i) = 11;
+       end
+       %totalPlayer = totalPlayer + playerHand(i);
+       if(totalPlayer > 21 & playerHand(i) == 11)%if bust and ace
+           playerHand(i) = 1;
+       end
+       pause(1);
+       fprintf('Your new card has a value of : %.0f ', playerHand(i));
+       pause(1);
+       fprintf('\nYour new total is : %.0f \n', totalPlayer);
+       pause(2);
+    %stand- don't deal alother card
+    else
+        continueLooping = false;
+    end
+end
+
+%print ending totals
+fprintf('The dealers hidden card is %.0f\n', dealerHand(2));
+pause(2);
+fprintf('Your total is: %.0f \n', totalPlayer);
+fprintf('The dealers total is: %.0f \n', totalDealer);
+pause(2);
+
+%print result statements
+if(totalPlayer == 21)
+    fprintf('Blackjack! You win! \n');
+elseif((totalPlayer-21) > (totalDealer-21) && ~(totalPlayer>21))%closest to 21
+    fprintf('You win!');
+elseif((totalPlayer-21) < (totalDealer-21) || totalPlayer>21)
+    fprintf('Dealer wins! \n');
+end
